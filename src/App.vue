@@ -1,7 +1,11 @@
 <template>
   <div id="app">
     <h1 class="heading" id="heading">{{heading}}</h1>
-    <div v-for="(item, index) in art" :key="index" class="item" :class="'img-' + (index + 1)">
+      <button class="btn btn-1" @click="showMore()">Show More</button>
+      <button class="btn btn-2" @click="showLess()">Show Less</button>
+      <button class="btn btn-3" @click="showAll()">Show All</button>
+      <button class="btn btn-4" @click="randomOrder()">Random Order</button>
+    <div v-for="(item, index) in art" :key="index" class="item" :class="'img-' + (index + 1)" v-if="index < numShown">
       <a :href="item.src" download>
         <img :src="item.src" :alt="item.heading">
       </a>
@@ -29,7 +33,8 @@ export default {
         { heading: "hexagons", src: path + "hexagons.jpg" },
         { heading: "octagon", src: path + "octagon.jpg" },
         { heading: "octagons", src: path + "octagons.jpg" }
-      ]
+      ],
+      numShown: 0
     };
   },
   beforeMount() {
@@ -43,11 +48,42 @@ export default {
         Math.floor(this.art.length * Math.random())
       ].heading;
     }, 3000);
+  },
+  methods: {
+    showMore() {
+      if (this.numShown < 12) {
+        this.numShown++;
+      }
+    },
+
+    showLess() {
+      if (this.numShown > 0) {
+        this.numShown--;
+      }
+    },
+
+    showAll() {
+      this.numShown = 12;
+    },
+
+    randomOrder() {
+      this.art.sort((a, b) => {
+        return 0.5 - Math.random();
+      });
+    }
   }
 };
 </script>
 
 <style lang="scss">
+:root {
+  --primary: #00d8d6;
+  --primary-dark: #03c2bf;
+  --secondary: #ffffff;
+  --tertiary: #323232;
+  --tertiary-dark: #232323;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -58,7 +94,7 @@ body {
   font-family: "lato", sans-serif;
   font-size: 10px;
   background-color: #fff;
-  color: #00d8d6;
+  color: var(--primary);
   padding: 2%;
 }
 
@@ -66,11 +102,12 @@ body {
   max-width: 100%;
   display: grid;
 
-  grid-template-rows: repeat(23, 12vmin);
+  grid-template-rows: repeat(24, 12vmin);
   grid-template-columns: repeat(8, 12vmin);
 
   grid-template-areas:
     "a a a a a a a a"
+    "n n o o p p q q"
     "b b b b b b b b"
     "b b b b b b b b"
     "b b b b b b b b"
@@ -115,10 +152,11 @@ body {
 }
 
 .item {
-  border: 1rem solid #00d8d6;
+  border: 1rem solid var(--primary);
   -webkit-box-shadow: 6px 17px 23px -7px rgba(0, 0, 0, 0.25);
   -moz-box-shadow: 6px 17px 23px -7px rgba(0, 0, 0, 0.25);
   box-shadow: 6px 17px 23px -7px rgba(0, 0, 0, 0.25);
+  transition: all 0.5s;
 }
 
 @media screen and (min-width: 1800px) {
@@ -137,6 +175,7 @@ body {
   -webkit-box-shadow: 6px 17px 23px -7px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 6px 17px 23px -7px rgba(0, 0, 0, 0.5);
   box-shadow: 6px 17px 23px -7px rgba(0, 0, 0, 0.5);
+  border-color: var(--primary-dark);
 }
 
 img {
@@ -150,6 +189,45 @@ img {
   text-align: center;
   grid-area: a;
   align-self: center;
+}
+
+.btn {
+  background-color: var(--tertiary);
+  color: var(--secondary);
+  border: none;
+  word-wrap: none;
+  height: 50%;
+  width: 100%;
+  border-radius: 1vh;
+  justify-self: center;
+  align-self: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.3s all;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    background-color: var(--tertiary-dark);
+  }
+
+  &-1 {
+    grid-area: n;
+  }
+
+  &-2 {
+    grid-area: o;
+  }
+
+  &-3 {
+    grid-area: p;
+  }
+
+  &-4 {
+    grid-area: q;
+  }
 }
 
 @media screen and (max-width: 599px) {
