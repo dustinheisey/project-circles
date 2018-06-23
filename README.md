@@ -1,6 +1,6 @@
 # circles
 
-> showcase for my abstract art
+> showcase for my abstract arts
 
 ## Build Setup
 
